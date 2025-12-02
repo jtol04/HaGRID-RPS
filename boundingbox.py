@@ -9,17 +9,19 @@ import cv2
 # https://stackoverflow.com/questions/66876906/create-a-rectangle-around-all-the-points-returned-from-mediapipe-hand-landmark-d
 # https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker/python
 
-landmarker_path = "/Users/jarytolentino/Downloads/hand_landmarker.task"
+landmarker_path = "hand_landmarker.task"
 
-def base64_to_rgb(encoded_string):
+def base64_to_rgb(image_bytes):
+    """
     if "," in encoded_string:
         encoded_string = encoded_string.split(",", 1)[1]
     
 
     decoded_bytes = base64.b64decode(encoded_string)
+    """
     
     # convert to np.uint8 buffer
-    numpy_arr = np.frombuffer(decoded_bytes, dtype = np.uint8)
+    numpy_arr = np.frombuffer(image_bytes, dtype = np.uint8)
 
     bgr = cv2.imdecode(numpy_arr, cv2.IMREAD_COLOR)
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
@@ -41,9 +43,9 @@ def hand_landmarker():
 
 landmarker = hand_landmarker()
 
-def bounding_box(encoded_string):
+def bounding_box(image_bytes):
     # convert base 64 encoded string to rgb
-    rgb = base64_to_rgb(encoded_string)
+    rgb = base64_to_rgb(image_bytes)
 
     # load the converted image
     mp_image = mp.Image(image_format = mp.ImageFormat.SRGB, data = rgb)
@@ -52,7 +54,7 @@ def bounding_box(encoded_string):
     result = landmarker.detect(mp_image)
 
     if not result.hand_landmarks:
-        print("No hand detected")
+        print("Error")
         return None, rgb 
     
     landmarks = result.hand_landmarks[0]
@@ -72,7 +74,7 @@ def bounding_box(encoded_string):
 
     # adding padding
 
-    padding = 120
+    padding = 35
     x_min = max(x_min - padding, 0)
     y_min = max(y_min - padding, 0)
     x_max = min(x_max + padding, w)
@@ -88,7 +90,6 @@ bbox, rgb_image = bounding_box(encoded_string)
 if bbox is not None:
     x1, y1, x2, y2 = bbox
     cropped_image = rgb_image[y1:y2, x1:x2]
-'''
 
 
 
@@ -108,3 +109,4 @@ if __name__ == "__main__":
     #save the iamge
     cropped_image = rgb_image[y1:y2, x1:x2]
     cv2.imwrite("cropped_hand.jpg", cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR))
+'''
