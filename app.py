@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import base64
+import boundingbox
+import cv2
 
 app = Flask(__name__)
 
@@ -16,6 +18,16 @@ def upload():
     print("Received image of size:", len(image_bytes), "bytes")
 
     #GET BOUNDING BOX AND CROP HAND (jary)
+    bbox, rgb_image = boundingbox.bounding_box(image_bytes)
+    if bbox is None:
+        print("No hand detected.")
+    else:
+        x1, y1, x2, y2 = bbox
+        print("Bounding box:", bbox)
+        cropped_image = rgb_image[y1:y2, x1:x2]
+        # saving locally for testing purposes - remove as needed
+        cv2.imwrite("cropped_hand.jpg", cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR))
+
 
     #RETURN IMAGE OF THE CROPPED HAND TO FRONTEND (bobby)
 
