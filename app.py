@@ -6,6 +6,7 @@ import torch
 import torchvision.transforms as T
 import torchvision.models as models
 import torch.nn as nn
+import random
 
 app = Flask(__name__)
 #load our trained model
@@ -83,13 +84,50 @@ def upload():
 
     #ONCE CLASS HAS BEEN DETERMINED, ADD LOGIC TO SEE IF USER WON AGAINST COMPUTERS RANDOM GUESS (bobby)
 
+
+        #simplify the gesture to euither rock, paper or scissors
+        if prediction in ["peace", "peace_inverted"]:
+            player_move = "scissors"
+        elif prediction == "fist":
+            player_move = "rock"
+        elif prediction in ["stop", "stop_inverted"]:
+            player_move = "paper"
+        elif prediction == "no_gesture":
+            player_move = "no_gesture"
+        else:
+            player_move = "error"
+
+        print("Player Move:", player_move)
+
+        #now, the server opponent will randomly choose either rock paper or scissors
+        print("Server is randomly choosing a move...")
+        computer_move = random.choice(["rock", "paper", "scissors"])
+        print("Computer Move:", computer_move)
+
+        #logic to determine the winner
+        if player_move in ["rock", "paper", "scissors"]:
+            if player_move == computer_move:
+                result = "Tie"
+            elif (player_move == "rock" and computer_move == "scissors") or (player_move == "paper" and computer_move == "rock") or (player_move == "scissors" and computer_move == "paper"):
+                result = "Player Wins"
+            else:
+                result = "Computer Wins"
+        else:
+            result = "Unknown Move"
+
+        print("Game Result:", result)
+
     #RETURN WHAT CLASS HAND WAS IDENTIFIED AS, AS WELL AS IF USER (bobbty)
 
     return {
-    "status": "success",
-    "cropped_image": f"data:image/png;base64,{cropped_base64}" if cropped_base64 else None,
-    "prediction": prediction
+        "status": "success",
+        "cropped_image": f"data:image/png;base64,{cropped_base64}" if cropped_base64 else None,
+        "prediction": prediction,
+        "player_move": player_move.capitalize(),
+        "computer_move": computer_move.capitalize(),
+        "result": result
     }
+
 
 if __name__ == '__main__':
     app.run(debug=True)
