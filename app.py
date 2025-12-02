@@ -28,6 +28,10 @@ def upload():
         # saving locally for testing purposes - remove as needed
         cv2.imwrite("cropped_hand.jpg", cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR))
 
+        #now, convert cropped image back to base64 so we can send it back
+        _, buffer = cv2.imencode('.png', cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR))
+        cropped_base64 = base64.b64encode(buffer).decode('utf-8')
+
 
     #RETURN IMAGE OF THE CROPPED HAND TO FRONTEND (bobby)
 
@@ -37,7 +41,10 @@ def upload():
 
     #RETURN WHAT CLASS HAND WAS IDENTIFIED AS, AS WELL AS IF USER (bobbty)
 
-    return {"status": "success"}
+    return {
+        "status": "success",
+        "cropped_image": f"data:image/png;base64,{cropped_base64}" if cropped_base64 else None
+    }
 
 if __name__ == '__main__':
     app.run(debug=True)
