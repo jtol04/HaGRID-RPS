@@ -11,12 +11,19 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     data = request.json['image']
-    print("data is: ", data)
     header, encoded = data.split(",", 1)
-    image_bytes = base64.b64decode(encoded)
-    print("image_bytes is:", image_bytes)
-    #do processing here
+    image_bytes = base64.b64decode(encoded) #use this var as input (might need further processing)
     print("Received image of size:", len(image_bytes), "bytes")
+
+    #GET BOUNDING BOX AND CROP HAND (jary)
+
+    #RETURN IMAGE OF THE CROPPED HAND TO FRONTEND (bobby)
+
+    #USE OUR TRAINED MODEL TO CLASSIFY THE CROPPED IMAGE (bobby)
+
+    #ONCE CLASS HAS BEEN DETERMINED, ADD LOGIC TO SEE IF USER WON AGAINST COMPUTERS RANDOM GUESS (bobby)
+
+    #RETURN WHAT CLASS HAND WAS IDENTIFIED AS, AS WELL AS IF USER (bobbty)
 
     return {"status": "success"}
 

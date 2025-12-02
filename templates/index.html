@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock, Paper, Scissors Classifier Test</title>
+    <style>
+        body {
+            background-color: #8fc6f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h2, h3 {
+            margin-bottom: 20px;
+        }
+        video, canvas {
+            width: 480px;
+            height: 360px;
+            border: 3px solid #023d79;
+            border-radius: 10px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            background-color: #023d79;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #011f3d;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Take a photo holding up Rock, Paper, or Scissors</h2>
+    <div class="container">
+        <video id="video" autoplay></video>
+
+        <div>
+            <button id="capture">Capture</button>
+            <button id="send">Submit</button>
+        </div>
+
+        <h3>Preview</h3>
+        <canvas id="canvas"></canvas>
+    </div>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        //set cancvas size to video
+        canvas.width = 480;
+        canvas.height = 360;
+
+        //start user webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => video.srcObject = stream)
+            .catch(err => console.error("Error:", err));
+
+        //capture current frame when clicking
+        document.getElementById('capture').onclick = () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        };
+
+        //send the captured image to upload endpoint
+        document.getElementById('send').onclick = () => {
+            const imageData = canvas.toDataURL('image/png');
+
+            fetch('/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(res => res.json())
+            .then(data => console.log(data));
+        };
+    </script>
+</body>
+</html>
