@@ -49,23 +49,49 @@
             flex-direction: column;
             align-items: center;
         }
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 50px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bottom-section {
+            margin-top: 40px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h2>Take a photo holding up Rock, Paper, or Scissors</h2>
-    <div class="container">
-        <video id="video" autoplay></video>
-        <div>
+    <div class="top-row">
+        <div class="left-panel">
+            <h3>Camera</h3>
+            <video id="video" autoplay></video>
             <button id="capture">Capture</button>
         </div>
-
-        <h3>Preview</h3>
-        <canvas id="canvas"></canvas>
-        <div>
+        <div class="right-panel">
+            <h3>Preview</h3>
+            <canvas id="canvas"></canvas>
             <button id="send">Submit</button>
         </div>
+    </div>
+    <div class="bottom-section">
         <h3>Cropped Hand</h3>
         <img id="croppedImage">
+
+        <h3>Results</h3>
+        <p id="playerMove"></p>
+        <p id="computerMove"></p>
+        <p id="gameResult"></p>
     </div>
     <script>
         const video = document.getElementById('video');
@@ -98,15 +124,17 @@
             .then(res => res.json())
             .then(data => {
                 console.log(data);
+
                 if (data.cropped_image) {
                     document.getElementById('croppedImage').src = data.cropped_image;
                 } else {
                     document.getElementById('croppedImage').src = "";
-                    alert("No hand detected.");
                 }
-            });
+                document.getElementById('playerMove').textContent = "Player Move: " + (data.player_move ?? "None");
+                document.getElementById('computerMove').textContent = "Computer Move: " + (data.computer_move ?? "None");
+                document.getElementById('gameResult').textContent = "Result: " + (data.result ?? "None");
+            });       
         };
-
     </script>
 </body>
 </html>
