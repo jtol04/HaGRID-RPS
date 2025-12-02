@@ -4,10 +4,14 @@ import boundingbox
 import cv2
 import torch
 import torchvision.transforms as T
+import torchvision.models as models
+import torch.nn as nn
 
 app = Flask(__name__)
 #load our trained model
-model = torch.load("mobilenetv3.pkl", map_location="cpu")
+model = models.mobilenet_v3_large(pretrained=False)
+model.classifier[3] = nn.Linear(1280, 6)
+model.load_state_dict(torch.load("mobilenetv3.pkl", map_location="cpu"))
 model.eval()
 
 #THIS MIGHT BE WRONG ORDER!!!! FIX
