@@ -22,6 +22,13 @@
             border: 3px solid #023d79;
             border-radius: 10px;
         }
+        #croppedImage {
+            width: 240px;
+            height: 360px;
+            border: 3px solid #023d79;
+            border-radius: 10px;
+        }
+
         button {
             margin: 10px;
             padding: 10px 20px;
@@ -48,14 +55,17 @@
     <h2>Take a photo holding up Rock, Paper, or Scissors</h2>
     <div class="container">
         <video id="video" autoplay></video>
-
         <div>
             <button id="capture">Capture</button>
-            <button id="send">Submit</button>
         </div>
 
         <h3>Preview</h3>
         <canvas id="canvas"></canvas>
+        <div>
+            <button id="send">Submit</button>
+        </div>
+        <h3>Cropped Hand</h3>
+        <img id="croppedImage">
     </div>
     <script>
         const video = document.getElementById('video');
@@ -86,8 +96,17 @@
                 body: JSON.stringify({ image: imageData })
             })
             .then(res => res.json())
-            .then(data => console.log(data));
+            .then(data => {
+                console.log(data);
+                if (data.cropped_image) {
+                    document.getElementById('croppedImage').src = data.cropped_image;
+                } else {
+                    document.getElementById('croppedImage').src = "";
+                    alert("No hand detected.");
+                }
+            });
         };
+
     </script>
 </body>
 </html>
