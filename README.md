@@ -11,6 +11,7 @@
 ├── cropped_hand.jpg          # sample cropped hand output from boundingbox.py
 ├── hand_landmarker.task      # needed for MediaPipe
 ├── mobilenetv3.pkl           # trained mobilenetv3 model
+```
 
 ### Running the website
 `python ./app.py`
