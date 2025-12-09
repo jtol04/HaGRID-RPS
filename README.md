@@ -1,10 +1,15 @@
-**HaGRID Hand Gesture Classification + Rock Papaer Scissors Web App**
+# HaGRID Hand Gesture Classification + Rock Paper Scissors App
 
-├── __pycache__/                 # Cached Python bytecode
-├── templates/                   # HTML templates for the web UI
-├── README.md                    # Project documentation
-├── app.py                       # Main web server / prediction logic
-├── boundingbox.py               # Bounding box + cropping utilities
-├── cropped_hand.jpg             # Example of cropped output
-├── hand_landmarker.task         # MediaPipe task model for hand detection
-├── mobilenetv3.pkl              # Trained gesture classifier
+
+## Project Structure
+
+An overview of the project's files and directories with brief descriptions:
+
+```plaintext
+├── templates/                # HTML templates
+│   └── index.html
+├── app.py                    # Flask Rock Paper Scissors application
+├── boundingbox.py            # MediaPipe Cropping for getting Hand Bounding Box from user input images
+├── cropped_hand.jpg          # sample cropped hand output from boundingbox.py
+├── hand_landmarker.task      # needed for MediaPipe
+├── mobilenetv3.pkl           # trained mobilenetv3 model
