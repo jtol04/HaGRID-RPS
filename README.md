@@ -3,8 +3,6 @@
 
 ## Project Structure
 
-An overview of the project's files and directories with brief descriptions:
-
 ```plaintext
 ├── templates/                # HTML templates
 │   └── index.html
